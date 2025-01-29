@@ -1,10 +1,10 @@
-import "./App.css";
 import {
-  CrossmintCheckoutProvider,
-  CrossmintEmbeddedCheckout,
   CrossmintProvider,
+  CrossmintCheckoutProvider,
+  CrossmintHostedCheckout,
   useCrossmintCheckout,
 } from "@crossmint/client-sdk-react-ui";
+import "./App.css";
 
 const clientApiKey = import.meta.env.VITE_CLIENT_API_KEY;
 const collectionId = import.meta.env.VITE_COLLECTION_ID;
@@ -24,25 +24,20 @@ function App() {
 function Checkout() {
   const { order } = useCrossmintCheckout();
 
-  if (order?.phase === "completed") {
-    return <div>NFT Delivered</div>;
-  }
+  console.log({ order: order ?? {} });
 
   return (
-    <CrossmintEmbeddedCheckout
+    <CrossmintHostedCheckout
       lineItems={{
         collectionLocator: `crossmint:${collectionId}`,
         callData: {
-          totalPrice: "0.03",
+          totalPrice: "0.001",
+          quantity: 1,
         },
       }}
       payment={{
-        crypto: {
-          enabled: true,
-        },
-        fiat: {
-          enabled: true,
-        },
+        crypto: { enabled: true }, // same as embedded
+        fiat: { enabled: true }, // same, except we can't disable google pay, apple pay, CC
       }}
     />
   );
